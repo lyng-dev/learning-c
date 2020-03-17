@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 #define MAXLEN 10
 
@@ -8,7 +9,7 @@ int main() {
 
   puts("Enter text a line at a time; enter a blank to exit.");
 
-  while(1) {
+  while(true) {
     fgets(buffer, MAXLEN, stdin);
     
     if (buffer[0] == '\n') {
