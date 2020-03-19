@@ -4,9 +4,11 @@ int multi[2][4];
 
 int main() {
 
+  multi[0][0] = 17;
+
   printf("\nmulti = %p", multi);
   printf("\nmulti[0] = %p", multi[0]);
-  printf("\n&multi[0][0] = %p", &multi[0][0]);
+  printf("\nmulti[0][0] = %d", multi[0][0]);
 
   return 0;
 
