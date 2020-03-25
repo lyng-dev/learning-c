@@ -11,7 +11,7 @@ struct data {
 
 /* Define typedefs for the structure */
 typedef struct data PERSON;
-typedef PERSON *LINK;
+typedef PERSON * LINK;
 
 #define __MALLOC_PERSON malloc(sizeof(PERSON))
 
@@ -42,7 +42,7 @@ int main() {
   new = (LINK)__MALLOC_PERSON;
   new->next = head->next;
   head->next = new;
-  strcpy(new->name, "Genfu");
+  strcpy((*new).name, "Genfu");
 
   /* Print all data items in order */
   current = head;
