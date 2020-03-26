@@ -16,7 +16,7 @@ int main() {
     while(true) {
         //input filename and mode.
         puts("\nEnter a filename: ");
-        fgets(filename, MAX_FILE_SIZE, stdin);
+        fgets(filename, MAX_FILE_SIZE, stdin);  
         filename[strcspn(filename, "\n")] = 0;
 
         puts("\nEnter a mode (max. 3 characters)");
