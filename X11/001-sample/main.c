@@ -9,38 +9,47 @@
 
 
 /* include the X library headers */
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/Xos.h>
+#include<X11/Xlib.h>
+#include<X11/Xutil.h>
+#include<X11/Xos.h>
 
 /* include some silly stuff */
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+
 
 /* here are our X variables */
-Display *dis;
-int screen;
-Window win;
-GC gc;
+Display     *display;
+int         screen;
+Window      window;
+GC          gc;
 
 /* here are our X routines declared! */
 void init_x();
 void close_x();
 void redraw();
+unsigned long _RGB(int r, int g, int b);
+
+//I write additional function _RGB(...) where r,g,b is components in range 0...255
+unsigned long _RGB(int r,int g, int b)
+{
+    return b + (g<<8) + (r<<16);
+}
 
 void main() {
-	XEvent event;		/* the XEvent declaration !!! */
-	KeySym key;		/* a dealie-bob to handle KeyPress Events */	
-	char text[255];		/* a char buffer for KeyPress Events */
+	XEvent  event;		/* the XEvent declaration !!! */
+	KeySym  key;		/* a dealie-bob to handle KeyPress Events */	
+	char    text[255];		/* a char buffer for KeyPress Events */
 
 	init_x();
 
 	/* look for events forever... */
-	while(1) {		
+	while(true) {		
 		/* get the next event and stuff it into our event variable.
 		   Note:  only events we set the mask for are detected!
 		*/
-		XNextEvent(dis, &event);
+		XNextEvent(display, &event);
 	
 		if (event.type==Expose && event.xexpose.count==0) {
 		/* the window was exposed redraw it! */
@@ -61,9 +70,9 @@ void main() {
 			int x=event.xbutton.x,
 			    y=event.xbutton.y;
 
-			strcpy(text,"X is FUN!");
-			XSetForeground(dis,gc,rand()%event.xbutton.x%255);
-			XDrawString(dis,win,gc,x,y, text, strlen(text));
+			strcpy(text,"This is a nice program");
+			XSetForeground(display,gc,_RGB(rand() % 255 + 1,rand() % 255 + 1,rand() % 255 + 1));
+			XDrawString(display,window,gc,x,y, text, strlen(text));
 		}
 	}
 }
@@ -72,28 +81,30 @@ void init_x() {
 /* get the colors black and white (see section for details) */        
 	unsigned long black,white;
 
-	dis=XOpenDisplay((char *)0);
-   	screen=DefaultScreen(dis);
-	black=BlackPixel(dis,screen),
-	white=WhitePixel(dis, screen);
-   	win=XCreateSimpleWindow(dis,DefaultRootWindow(dis),0,0,	
-		300, 300, 5,black, white);
-	XSetStandardProperties(dis,win,"Howdy","Hi",None,NULL,0,NULL);
-	XSelectInput(dis, win, ExposureMask|ButtonPressMask|KeyPressMask);
-        gc=XCreateGC(dis, win, 0,0);        
-	XSetBackground(dis,gc,white);
-	XSetForeground(dis,gc,black);
-	XClearWindow(dis, win);
-	XMapRaised(dis, win);
+	display     = XOpenDisplay((char *)0);
+   	screen      = DefaultScreen(display);
+	black       = BlackPixel(display,screen),
+	white       = WhitePixel(display, screen);
+
+   	window = XCreateSimpleWindow(display,DefaultRootWindow(display),0,0,	
+		            600, 600, 5,black, white);
+	XSetStandardProperties(display,window,"Howdy","Hi",None,NULL,0,NULL);
+	XSelectInput(display, window, ExposureMask|ButtonPressMask|KeyPressMask);
+
+    gc = XCreateGC(display, window, 0,0);        
+	XSetBackground(display,gc,white);
+	XSetForeground(display,gc,black);
+	XClearWindow(display, window);
+	XMapRaised(display, window);
 };
 
 void close_x() {
-	XFreeGC(dis, gc);
-	XDestroyWindow(dis,win);
-	XCloseDisplay(dis);	
+	XFreeGC(display, gc);
+	XDestroyWindow(display,window);
+	XCloseDisplay(display);	
 	exit(1);				
 };
 
 void redraw() {
-	XClearWindow(dis, win);
+	//XClearWindow(display, window);
 };
